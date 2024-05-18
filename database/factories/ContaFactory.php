@@ -17,7 +17,8 @@ class ContaFactory extends Factory
     public function definition(): array
     {
         return [
-            'saldo' => $this->faker->numberBetween(100, 1000)
+            'saldo' => $this->faker->numberBetween(100, 1000),
+            'numero_conta' => $this->faker->numberBetween(1, 1000)
         ];
     }
 }

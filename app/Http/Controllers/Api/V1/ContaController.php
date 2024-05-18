@@ -13,7 +13,7 @@ class ContaController extends Controller
      */
     public function index()
     {
-        return Conta::select('id as conta', 'saldo')->get();
+        return Conta::select('numero_conta', 'saldo')->get();
     }
 
     /**
@@ -29,22 +29,24 @@ class ContaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request = $request->all();
+        
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $numero_conta)
     {
-        $conta = Conta::where('id', $id)->first();
+        $conta = Conta::where('numero_conta', $numero_conta)->first();
 
         if (!$conta) {
             return response()->json(['message' => 'Conta não encontrada'], 404);
         }
 
         return response()->json([
-            'id' => $conta->id,
+            'id' => $conta->numero_conta,
             'saldo' => $conta->saldo,
         ]);
     }

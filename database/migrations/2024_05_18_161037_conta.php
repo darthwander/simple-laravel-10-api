@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('contas', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('numero_conta');
             $table->decimal('saldo', 10, 2);
             $table->timestamps();
         });
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('conta');
+        Schema::dropIfExists('contas');
     }
 };
