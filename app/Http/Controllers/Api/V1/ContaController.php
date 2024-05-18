@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Conta;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ContaController extends Controller
 {
@@ -29,9 +31,29 @@ class ContaController extends Controller
      */
     public function store(Request $request)
     {
-        $request = $request->all();
-        
+        // validar em outro arquivo
+        $validator = Validator::make($request->all(), [
+            'numero_conta' => 'required|unique:contas,numero_conta',
+            'saldo' => 'required|numeric'
+        ]);
 
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            throw new HttpResponseException(response()->json([
+                'message' => 'Validation error',
+                'errors' => $errors,
+            ], 409));
+        }
+        //até aqui
+
+        $request = $request->all();
+
+        $conta = Conta::create($request);
+
+        return response()->json([
+            "numero_conta" => $conta->numero_conta,
+            "saldo" => $conta->saldo
+        ], 201);
     }
 
     /**
@@ -45,10 +67,7 @@ class ContaController extends Controller
             return response()->json(['message' => 'Conta não encontrada'], 404);
         }
 
-        return response()->json([
-            'id' => $conta->numero_conta,
-            'saldo' => $conta->saldo,
-        ]);
+         return response()->json([$conta], 201);
     }
 
     /**

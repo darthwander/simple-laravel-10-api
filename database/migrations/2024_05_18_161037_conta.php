@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('contas', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('numero_conta');
+            $table->integer('numero_conta')->unique();
             $table->decimal('saldo', 10, 2);
             $table->timestamps();
         });
