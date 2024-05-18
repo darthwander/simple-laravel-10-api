@@ -59,15 +59,18 @@ class ContaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $numero_conta)
+    public function show(Request $request)
     {
-        $conta = Conta::where('numero_conta', $numero_conta)->first();
+        $numero_conta = $request->input('numero_conta');
+        $conta = Conta::select('numero_conta', 'saldo')
+            ->where('numero_conta', $numero_conta)
+            ->first();
 
         if (!$conta) {
             return response()->json(['message' => 'Conta não encontrada'], 404);
         }
 
-         return response()->json([$conta], 201);
+         return response()->json([$conta]);
     }
 
     /**
