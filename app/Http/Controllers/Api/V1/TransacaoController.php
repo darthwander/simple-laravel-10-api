@@ -18,7 +18,7 @@ class TransacaoController extends Controller
             return response()->json(
                 [
                     'numero_conta' => $request->numero_conta,
-                    'saldo' => $saldo_atualizado
+                    'saldo' => (float) $saldo_atualizado->saldo
                 ]);    
         }
         
