@@ -27,7 +27,7 @@ class ContasStoreRequest extends FormRequest
     {
         $validator = Validator::make($request->all(), [
             'numero_conta' => 'required|unique:contas,numero_conta',
-            'saldo' => 'required|numeric'
+            'saldo' => 'required|numeric|min:0'
         ]);
 
         if ($validator->fails()) {
@@ -35,7 +35,7 @@ class ContasStoreRequest extends FormRequest
             throw new HttpResponseException(response()->json([
                 'message' => 'Validation error',
                 'errors' => $errors,
-            ], 409));
+            ], 406));
         }
     }
 
