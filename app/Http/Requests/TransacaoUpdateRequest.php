@@ -29,7 +29,7 @@ class TransacaoUpdateRequest extends FormRequest
     {
         $data = $request->all();
         $validator = Validator::make($data, [
-            'numero_conta' => 'required|integer|exists:contas,numero_conta',
+            'numero_conta' => 'required|integer|min:1|exists:contas,numero_conta',
             'forma_pagamento' => 'required|in:P,C,D',
             'valor' => 'required|numeric|min:0.01'
         ]);

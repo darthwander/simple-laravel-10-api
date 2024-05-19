@@ -26,7 +26,7 @@ class ContasStoreRequest extends FormRequest
     public static function rules(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'numero_conta' => 'required|unique:contas,numero_conta',
+            'numero_conta' => 'required|unique:contas,numero_conta|min:1',
             'saldo' => 'required|numeric|min:0'
         ]);
 
@@ -38,5 +38,4 @@ class ContasStoreRequest extends FormRequest
             ], 406));
         }
     }
-
 }
