@@ -23,14 +23,18 @@ class Conta extends Model
         "C" => 0.05
     ];
 
-    public static function consultaSaldo(Request $request)
+    public static function listar(){
+
+    }
+
+    public static function consultarSaldo(Request $request)
     {
         return Conta::select('saldo')
             ->where('numero_conta', $request->numero_conta)
             ->first();
     }
 
-    public static function calculaTransacao(Request $request): float
+    public static function calcularTransacao(Request $request): float
     {
         $valor = $request->valor;
         $taxa = self::$taxas[$request->forma_pagamento] ?? 0;
@@ -39,8 +43,8 @@ class Conta extends Model
 
     public static function efetuaTransacao(Request $request)
     {
-        $valor_transacao = self::calculaTransacao($request);
-        $saldo_inicial = self::consultaSaldo($request);
+        $valor_transacao = self::calcularTransacao($request);
+        $saldo_inicial = self::consultarSaldo($request);
         $saldo_atualizado = $saldo_inicial->saldo - $valor_transacao;
 
         return DB::table('contas')

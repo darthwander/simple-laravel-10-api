@@ -42,12 +42,12 @@ class TransacaoUpdateRequest extends FormRequest
             ], 422));
         }
         
-        self::verificaSaldoSuficiente($request);
+        self::verificarSaldoSuficiente($request);
     }
     
-    public static function verificaSaldoSuficiente(Request $request): void
+    public static function verificarSaldoSuficiente(Request $request): void
     {
-        $saldo = Conta::consultaSaldo($request);
+        $saldo = Conta::consultarSaldo($request);
 
         if (!$saldo) {
             throw new HttpResponseException(response()->json([
@@ -57,7 +57,7 @@ class TransacaoUpdateRequest extends FormRequest
 
         $saldo = $saldo->saldo;
 
-        $valor_transacao = Conta::calculaTransacao($request);
+        $valor_transacao = Conta::calcularTransacao($request);
 
         if ($saldo < $valor_transacao) {
             throw new HttpResponseException(response()->json([

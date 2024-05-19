@@ -14,7 +14,7 @@ class TransacaoController extends Controller
         TransacaoUpdateRequest::rules($request);
         
         if (Conta::efetuaTransacao($request)) {
-            $saldo_atualizado = Conta::consultaSaldo($request);
+            $saldo_atualizado = Conta::consultarSaldo($request);
             return response()->json(
                 [
                     'numero_conta' => $request->numero_conta,

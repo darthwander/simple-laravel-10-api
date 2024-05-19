@@ -22,7 +22,7 @@ class ContaController extends Controller
 
         return response()->json([
             "numero_conta" => $conta->numero_conta,
-            "saldo" => $conta->saldo
+            "saldo" => (float) $conta->saldo
         ], 201);
     }
 
