@@ -23,8 +23,22 @@ class Conta extends Model
         "C" => 0.05
     ];
 
-    public static function listar(){
+    public static function exibirDadosConta(Request $request)
+    {
+        $numero_conta = $request->input('numero_conta');
 
+        $conta = Conta::select('numero_conta', 'saldo')
+            ->where('numero_conta', $numero_conta)
+            ->first();
+
+        if (!$conta) {
+            return ['message' => 'Conta não encontrada'];
+        }
+
+        return [
+            "numero_conta" => $conta->numero_conta,
+            "saldo" => $conta->saldo
+        ];
     }
 
     public static function consultarSaldo(Request $request)

@@ -28,17 +28,12 @@ class ContaController extends Controller
 
     public function show(Request $request)
     {
-        $numero_conta = $request->input('numero_conta');
-        $conta = Conta::select('numero_conta', 'saldo')
-            ->where('numero_conta', $numero_conta)
-            ->first();
+        $response = Conta::exibirDadosConta($request);
 
-        if (!$conta) {
-            return response()->json(
-                ['message' => 'Conta não encontrada']
-                , 404);
+        if (array_key_exists('message', $response)) {
+            return response()->json($response, 404);
         }
 
-        return response()->json([$conta]);
+        return response()->json($response);
     }
 }
