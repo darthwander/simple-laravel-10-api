@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ContasStoreRequest;
 use Illuminate\Http\Request;
 use App\Models\Conta;
 use Illuminate\Support\Facades\Validator;
@@ -31,24 +32,8 @@ class ContaController extends Controller
      */
     public function store(Request $request)
     {
-        // validar em outro arquivo
-        $validator = Validator::make($request->all(), [
-            'numero_conta' => 'required|unique:contas,numero_conta',
-            'saldo' => 'required|numeric'
-        ]);
-
-        if ($validator->fails()) {
-            $errors = $validator->errors();
-            throw new HttpResponseException(response()->json([
-                'message' => 'Validation error',
-                'errors' => $errors,
-            ], 409));
-        }
-        //até aqui
-
-        $request = $request->all();
-
-        $conta = Conta::create($request);
+        ContasStoreRequest::rules($request);
+        $conta = Conta::create( $request->all());
 
         return response()->json([
             "numero_conta" => $conta->numero_conta,
@@ -71,29 +56,5 @@ class ContaController extends Controller
         }
 
          return response()->json([$conta]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
