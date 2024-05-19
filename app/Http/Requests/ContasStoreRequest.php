@@ -23,7 +23,7 @@ class ContasStoreRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
-    public static function rules(Request $request): array
+    public static function rules(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'numero_conta' => 'required|unique:contas,numero_conta',
