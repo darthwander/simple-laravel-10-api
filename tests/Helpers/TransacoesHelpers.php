@@ -13,7 +13,7 @@ function calcularTransacao($valor, $taxa) : float
     return round($valor + ($valor * $taxa), 2);
 }
 
-function defaultNegativeAssertions($response, $expectedStatusCode, $message) : void
+function defaultNegativeAssertionsTransactions($response, $expectedStatusCode, $message) : void
 {    
     $response->assertStatus($expectedStatusCode);
     $response = $response->getData(true);
@@ -21,7 +21,7 @@ function defaultNegativeAssertions($response, $expectedStatusCode, $message) : v
     expect($response['message'])->toEqual($message);
 }
 
-function defaultPositiveAssertions($response, $expectedStatusCode, $taxa = 0, $numero_conta = 999999) : void
+function defaultPositiveAssertionsTransactions($response, $expectedStatusCode, $taxa = 0, $numero_conta = 999999) : void
 {   
     $response->assertStatus($expectedStatusCode);
     $response->assertJsonStructure([
@@ -36,7 +36,7 @@ function defaultPositiveAssertions($response, $expectedStatusCode, $taxa = 0, $n
     expect($res['saldo'])->toEqual($saldo_esperado);
 }
 
-function buildData($forma_pagamento, $valor = 94.10, $numero_conta = 999999) : array
+function payloadTransactions($forma_pagamento, $valor = 94.10, $numero_conta = 999999) : array
 {
     return [ 
         "forma_pagamento" => $forma_pagamento,
