@@ -74,7 +74,9 @@ describe('Casos Negativos', function () {
         expect($res['message'])->toEqual("Validation error");
         $response->assertStatus(422);
         
-    })->with('formasPagamentoValoresInvalidos');
+    })
+    ->with('formasPagamento')
+    ->with('valoresInvalidos');
     
     it('Não deve executar a transação, pois a forma de pagamento é inválida', function ($forma_pagamento)
     {
@@ -90,4 +92,21 @@ describe('Casos Negativos', function () {
         expect($res['message'])->toEqual("Validation error");
         $response->assertStatus(422);
     })->with('formasPagamentoInvalidos');
+
+    it('Não deve executar a transação, pois a conta não existe ou é inválida.', function ($forma_pagamento, $taxa, $numero_conta)
+    {
+        $data = [ 
+            "forma_pagamento" => $forma_pagamento,
+            "numero_conta" => $numero_conta,
+            "valor" => 94.10
+        ];
+        $response = $this->postJson('/api/v1/transacao', $data);
+            
+        $res = $response->getData(true);
+        expect($res)->toHaveKey('message');
+        expect($res['message'])->toEqual("Validation error");
+        $response->assertStatus(422);
+    })
+    ->with('formasPagamentoComTaxa')
+    ->with('contasInvalidas');
 });    
