@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\ContaController;
-use App\Http\Controllers\Api\V1\TransacaoController;
+use App\Http\Controllers\Api\V1\TransacoesController;
 
 Route::prefix('v1')->group( function () 
 {
@@ -12,5 +12,5 @@ Route::prefix('v1')->group( function ()
     Route::post('/conta/registrar-conta', [ContaController::class, 'store']);
 
     //Transação
-    Route::post('/transacao', [TransacaoController::class, 'update']);
+    Route::post('/transacao', [TransacoesController::class, 'update']);
 });
