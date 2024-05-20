@@ -18,27 +18,32 @@
 
 **Premissa**: Este guia pressupõe que você já possui as ferramentas listadas em "Requisitos" instaladas em seu ambiente.
 
-1. **Instalar Dependências**:
+1. **Criar o .env**:
+    ```sh
+    cp .evn.example .env
+    ```
+
+2. **Instalar Dependências**:
     ```sh
     composer install
     ```
 
-2. **Iniciar Banco de Dados (PostgreSQL)**:
+3. **Iniciar Banco de Dados (PostgreSQL)**:
     ```sh
     docker-compose up -d
     ```
 
-3. **Executar Migração**:
+4. **Executar Migração**:
     ```sh
     php artisan migrate
     ```
 
-4. **Popular Tabelas com Dados**:
+5. **Popular Tabelas com Dados**:
     ```sh
     php artisan db:seed
     ```
 
-5. **Iniciar Servidor**:
+6. **Iniciar Servidor**:
     ```sh
     php artisan serve
     ```
