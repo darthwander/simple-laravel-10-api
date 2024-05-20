@@ -2,18 +2,22 @@
 
 use Illuminate\Support\Facades\DB;
 
+beforeEach( function ()
+{
+    $this->numeroContaTest = 999999;
+});
+
 describe('Casos Positivos', function () {
 
     afterEach( function ()
     {
-        DB::table('contas')->where('numero_conta', 999999)->delete();
+        DB::table('contas')->where('numero_conta', $this->numeroContaTest)->delete();
     });
 
     it('Deve criar uma nova conta', function ($saldo)
     {
-        $numero_conta =  999999;
         $data = [
-            "numero_conta" => $numero_conta,
+            "numero_conta" => $this->numeroContaTest,
             "saldo" => $saldo
         ];
 
@@ -27,28 +31,23 @@ describe('Casos Positivos', function () {
 
         expect($response['numero_conta'])
             ->toBeInt()
-            ->toEqual($numero_conta);
+            ->toEqual($this->numeroContaTest);
 
         expect($response['saldo'])
             ->toBeNumeric()
             ->toEqual($saldo)
             ->toBeGreaterThanOrEqual(0);
-    })->with(
-        [
-            [0], [10], [100], [1000]
-        ]);
+    })->with('saldos');
 
     it('Deve exibir informações da conta', function ()
     {
-        $numero_conta = 999999;
-        $saldo = 100;
         $data = [
-            "numero_conta" => $numero_conta,
-            "saldo" => $saldo
+            "numero_conta" => $this->numeroContaTest,
+            "saldo" => $saldo = 100.00
         ];
 
         $this->postJson('/api/v1/conta/registrar-conta', $data);
-        $response = $this->getJson("api/v1/conta/exibir-conta?numero_conta=$numero_conta");
+        $response = $this->getJson("api/v1/conta/exibir-conta?numero_conta=$this->numeroContaTest");
 
         $response->assertStatus(200);
 
@@ -59,7 +58,7 @@ describe('Casos Positivos', function () {
 
         expect($response['numero_conta'])
             ->toBeInt()
-            ->toEqual($numero_conta);
+            ->toEqual($this->numeroContaTest);
 
         expect($response['saldo'])
             ->toBeNumeric()
@@ -72,12 +71,9 @@ describe('Casos Negativos', function () {
 
     it('Não deve criar uma nova conta pois já existe', function ()
     {
-        $numero_conta =  999999;
-        $saldo = 2000.00;
-
         $data = [
-            "numero_conta" => $numero_conta,
-            "saldo" => $saldo
+            "numero_conta" => $this->numeroContaTest,
+            "saldo" => 100.00
         ];
 
         $this->postJson('/api/v1/conta/registrar-conta', $data);
@@ -86,17 +82,14 @@ describe('Casos Negativos', function () {
         $response->assertStatus(406);
         expect($response->getData(true))->toHaveKey('errors.numero_conta');
 
-        DB::table('contas')->where('numero_conta', $numero_conta)->delete();
+        DB::table('contas')->where('numero_conta', $this->numeroContaTest)->delete();
     });
 
     it('Não deve criar a conta pois o valor é negativo', function ()
     {
-        $numero_conta =  999999;
-        $saldo = -100.00;
-
         $data = [
-            "numero_conta" => $numero_conta,
-            "saldo" => $saldo
+            "numero_conta" => $this->numeroContaTest,
+            "saldo" => -100.00
         ];
 
         $response = $this->postJson('/api/v1/conta/registrar-conta', $data);
@@ -107,11 +100,9 @@ describe('Casos Negativos', function () {
 
     it('Não deve criar a conta pois o numero da conta é inválido', function ($numero_conta)
     {
-        $saldo = 100.00;
-
         $data = [
             "numero_conta" => $numero_conta,
-            "saldo" => $saldo
+            "saldo" => 100.00
         ];
 
         $response = $this->postJson('/api/v1/conta/registrar-conta', $data);
@@ -119,9 +110,7 @@ describe('Casos Negativos', function () {
         $response->assertStatus(406);
         expect($response->getData(true))->toHaveKey('errors.numero_conta');
 
-    })->with([
-            [null], [0], [-1], [-10], [-100]
-        ]);
+    })->with('numerosContasInvalidas');
 
     it('Não deve exibir as informações da conta, pois o número da conta não existe', function ($numero_conta)
     {

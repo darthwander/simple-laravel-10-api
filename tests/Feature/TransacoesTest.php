@@ -4,8 +4,9 @@ use Illuminate\Support\Facades\DB;
 
 beforeEach( function ()
 {
+    $this->numeroContaTest = 999999;
     $data = [
-        "numero_conta" => 999999,
+        "numero_conta" => $this->numeroContaTest,
         "saldo" => 100.00
     ];
     
@@ -14,7 +15,7 @@ beforeEach( function ()
 
 afterEach( function ()
 {
-    DB::table('contas')->where('numero_conta', 999999)->delete();
+    DB::table('contas')->where('numero_conta', $this->numeroContaTest)->delete();
 });
 
 describe('Caso Positivo', function () {
@@ -23,7 +24,7 @@ describe('Caso Positivo', function () {
     {
         $data = [ 
             "forma_pagamento" => $forma_pagamento,
-            "numero_conta" =>  $numero_conta = 999999,
+            "numero_conta" =>  $numero_conta = $this->numeroContaTest,
             "valor" => $valor = 94.10
         ];
         $response = $this->postJson('/api/v1/transacao', $data);
@@ -39,9 +40,7 @@ describe('Caso Positivo', function () {
         $res = $response->getData(true);
         expect($res['numero_conta'])->toEqual($numero_conta);
         expect($res['saldo'])->toEqual($saldo_esperado);
-    })->with([
-            ['P', 0], ['D', 0.03], ['C', 0.05] 
-        ]);
+    })->with('formasPagamentoComTaxa');
 });
 
 describe('Casos Negativos', function () {
@@ -50,7 +49,7 @@ describe('Casos Negativos', function () {
     {
         $data = [ 
             "forma_pagamento" => $forma_pagamento,
-            "numero_conta" => 999999,
+            "numero_conta" => $this->numeroContaTest,
             "valor" => $valor = 100.1
         ];
         $response = $this->postJson('/api/v1/transacao', $data);
@@ -59,15 +58,13 @@ describe('Casos Negativos', function () {
         expect($res)->toHaveKey('message');
         expect($res['message'])->toEqual("Saldo insuficiente");
         $response->assertStatus(404);
-    })->with([
-        ['P'], ['D'], ['C'] 
-    ]);;
+    })->with('formasPagamento');;
     
     it('Não deve executar a transação, pois o valor é inválido', function ($forma_pagamento, $valor)
     {
         $data = [ 
             "forma_pagamento" => $forma_pagamento,
-            "numero_conta" => 999999,
+            "numero_conta" => $this->numeroContaTest,
             "valor" => $valor
         ];
         $response = $this->postJson('/api/v1/transacao', $data);
@@ -77,18 +74,13 @@ describe('Casos Negativos', function () {
         expect($res['message'])->toEqual("Validation error");
         $response->assertStatus(422);
         
-    })->with([
-        ['P', 0], ['D', 0], ['C', 0],
-        ['P', -1], ['D', -1], ['C', -1],
-        ['P', null], ['D', null], ['C', null],
-        ['P', ''], ['D', ''], ['C', ''],
-        ]);
+    })->with('formasPagamentoValoresInvalidos');
     
     it('Não deve executar a transação, pois a forma de pagamento é inválida', function ($forma_pagamento)
     {
         $data = [ 
             "forma_pagamento" => $forma_pagamento,
-            "numero_conta" => 999999,
+            "numero_conta" => $this->numeroContaTest,
             "valor" => 94.10
         ];
         $response = $this->postJson('/api/v1/transacao', $data);
@@ -97,20 +89,5 @@ describe('Casos Negativos', function () {
         expect($res)->toHaveKey('message');
         expect($res['message'])->toEqual("Validation error");
         $response->assertStatus(422);
-    })->with([
-        ['A'], [0.01], [1], [null], ['']
-    ]);
+    })->with('formasPagamentoInvalidos');
 });    
-
-function calcularSaldoEsperado($valor, $taxa) : float
-{
-    $total_transacao = calcularTransacao($valor, $taxa);
-    
-    return round(100 - $total_transacao, 2);
-    
-}
-
-function calcularTransacao($valor, $taxa) : float
-{
-    return round($valor + ($valor * $taxa), 2);
-}
