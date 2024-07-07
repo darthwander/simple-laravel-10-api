@@ -11,6 +11,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Conta::factory(count:10)->create();
+        $this->call([
+            ContaSeeder::class,
+            //Add more seeders here
+        ]);
     }
 }
