@@ -1,0 +1,164 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Seu Título de API",
+        "description": "Descrição da sua API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/conta/listar-contas": {
+            "get": {
+                "tags": [
+                    "Conta"
+                ],
+                "summary": "Get all accounts",
+                "operationId": "05c64b40d38222f5589f4ad5198341c3",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "numero_conta": {
+                                            "description": "Account number",
+                                            "type": "string"
+                                        },
+                                        "saldo": {
+                                            "description": "Todas as contas cadastradas no sistema.",
+                                            "type": "number"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/conta/registrar-conta": {
+            "post": {
+                "tags": [
+                    "Conta"
+                ],
+                "summary": "Create a new account",
+                "operationId": "d92a5be1edb5a9806147744c20258e09",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "numero_conta": {
+                                        "description": "Account number",
+                                        "type": "string"
+                                    },
+                                    "saldo": {
+                                        "description": "Initial balance of the account",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Account created successfully"
+                    },
+                    "406": {
+                        "description": "Invalid data"
+                    }
+                }
+            }
+        },
+        "/api/v1/conta/exibir-conta": {
+            "get": {
+                "tags": [
+                    "Conta"
+                ],
+                "summary": "Get account information",
+                "operationId": "c3662be2efae08f05bef9b5584f3d693",
+                "parameters": [
+                    {
+                        "name": "numero_conta",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account information retrieved successfully"
+                    },
+                    "404": {
+                        "description": "Account not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/transacoes": {
+            "post": {
+                "tags": [
+                    "Transacao"
+                ],
+                "summary": "Create a new transaction",
+                "operationId": "bc1d06578b12ac28206dc500efe3cb15",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "numero_conta": {
+                                        "description": "Account number",
+                                        "type": "string"
+                                    },
+                                    "forma_pagamento": {
+                                        "description": "Payment method",
+                                        "type": "string",
+                                        "enum": [
+                                            "PIX",
+                                            "BOLETO",
+                                            "CARTAO"
+                                        ]
+                                    },
+                                    "valor": {
+                                        "description": "Transaction value",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Transaction created successfully"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    },
+                    "404": {
+                        "description": "Account not found"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Conta",
+            "description": "API para gerenciamento de contas"
+        },
+        {
+            "name": "Transacao",
+            "description": "API para gerenciamento de transações"
+        }
+    ]
+}
