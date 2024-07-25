@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\ContaController;
 use App\Http\Controllers\Api\V1\TransacoesController;
 
-Route::prefix('v1')->group( function () 
+Route::prefix('v1')->group( function ()
 {
     //Conta
     Route::get('/conta/listar-contas', [ContaController::class, 'index']);
@@ -13,4 +13,7 @@ Route::prefix('v1')->group( function ()
 
     //Transação
     Route::post('/transacao', [TransacoesController::class, 'update']);
+
+    //Hooks
+    Route::post('/hooks', [TransacoesController::class, 'hooks']);
 });

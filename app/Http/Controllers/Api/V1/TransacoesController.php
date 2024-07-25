@@ -68,4 +68,10 @@ class TransacoesController extends Controller
                 'saldo' => (float) $saldo_atualizado->saldo
             ], 201);
     }
+
+    public function hooks(Request $request) :void
+    {
+        //
+
+    }
 }
