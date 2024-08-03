@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Observers\ContaObserver;
+use Laravel\Sanctum\Observer;
 
 class Conta extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'numero_conta',
         'saldo'
@@ -64,6 +66,13 @@ class Conta extends Model
         return DB::table('contas')
             ->where('numero_conta', $request->numero_conta)
             ->update(['saldo' => $saldo_atualizado]);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::observe(ContaObserver::class);
     }
 
 }
